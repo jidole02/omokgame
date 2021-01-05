@@ -109,6 +109,17 @@ function blackUp(e,b){
     let max = 0;
     let min = 50;
     test[e][b] = 100;
+    if(diaJustOneNo()){
+        return 0;
+    }
+    if(diaUnderJustOneNo()){
+        return 0;
+    }
+    if(horJustOneNo()){
+        console.log('가로 채우고 이김 ㅅㄱ')
+        return 0;
+    }
+    // 지기 한수 전부터 다 막기
     if(diagardUpFull()){
         console.log('대각선 위쪽으로 급함')
         say.innerHTML = "이번에도 질 뻔 했어요."
@@ -124,11 +135,13 @@ function blackUp(e,b){
         say.innerHTML = "이번에도 질 뻔 했어요."
         return 0;   
     }
+    // 가장 마지막 수
     if(sucessDolHorizon()){ // 최후의 수
         console.log('최후')
         say.innerHTML = "마지막 수입니다."
         return 0;
     }
+    // 다시 막아야 하는 수들
     if(diaUpNoOne3()){
         console.log('대각선 위로 하나 빔 2')
         say.innerHTML = "대각선은 줄 수 없습니다."
@@ -173,6 +186,19 @@ function blackUp(e,b){
         console.log('세로 5개 하나 전')
         say.innerHTML = "질뻔 했네요."
         return 0;
+    }
+    // 여기서부터 공격 수
+    console.log('여기부터')
+    if(horizonNoOneSuccess()){
+        console.log('가로 한칸 빈거 채우고 이기는 수')
+        return 0;
+    }
+    if(diaUpNoOneSuccess()){
+        console.log('대각선 위로 한칸 빈거 채우고 이기는 수')
+        return 0;
+    }
+    if(diaUnderNoOneSuccess()){
+        console.log('대각선 아래로 한칸 빈 거 채우고 이기는 수')
     }
         if(whiteGod()){
             console.log('가로 신의한수')
@@ -1144,6 +1170,211 @@ function square(){
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+function horizonNoOneSuccess(){
+    let d = 0;
+    let inX;
+    let inY;
+    let winNum=0;
+    for(i=0;i<19;i++){
+        for(j=0;j<18;j++){
+            if(test[i][j]>200){
+                console.log(i,j)
+                if(test[i][j+3]>200){ // -o-oo-
+                    if(test[i][j-1] < 90 && test[i][j+4]<90){ // 양 끝 비었는지 확인
+                        for(d=1; d<4;d++){
+                            if(test[i][j+d]>200){
+                                winNum++;
+                                console.log(winNum)
+                            }
+                            if(test[i][j+d]<90){
+                                inY = i;
+                                inX = j+d;
+                                if(winNum == 2){
+                                    if(inX!=0){
+                                        white(inY,inX)
+                                        return 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            inY=0;
+            inX=0;
+            winNum = 0;
+        }
+    }
+}
+
+function diaUpNoOneSuccess(){
+    let winNum = 0;
+    let inX = 0;
+    let inY = 0;
+    for(i=0;i<19;i++){
+        for(j=0;j<18;j++){
+            if(test[i][j]>200){ // 만약 제일 처음 흰색
+                if(test[i+3][j-3]>200){ // 만약 제일 끝도 흰색
+                    if(test[i-1][j+1]<90 && test[i+4][j-4]<90){  // 양 옆이 둘 다 비었을 때
+                        for(let d=1;d<3;d++){
+                            if(test[i+d][j-d] > 200){
+                                winNum++;
+                            }
+                            if(test[i+d][j-d]<90){
+                                inY = i+d;
+                                inX = i-d;
+                                if(winNum == 1){
+                                    if(inX!=0){
+                                        white(inY,inX)
+                                        return 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    inY=0;
+                    inX=0;
+                    winNum = 0;
+                }
+            }
+        }
+    }
+}
+
+function diaUnderNoOneSuccess(){
+    let winNum = 0;
+    let inX = 0;
+    let inY = 0;
+    for(i=0;i<19;i++){
+        for(j=0;j<18;j++){
+            if(test[i][j]>200){
+                if(test[i+3][j+3]>200){
+                    if(test[i-1][j-1]<90 && test[i+4][j+4]<90){
+                        for(let d=1;d<3;d++){
+                            if(test[i+d][j+d] > 200){
+                                winNum++;
+                            }
+                            if(test[i+d][j+d]<90){
+                                inY = i+d;
+                                inX = i-d;
+                                if(winNum == 1){
+                                    if(inX!=0){
+                                        white(inY,inX)
+                                        return 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    inY=0;
+                    inX=0;
+                    winNum = 0;
+                }
+            }
+        }
+    }
+}
+
+
+function horJustOneNo(){
+    console.log('가로 체크')
+    let d = 0;
+    let inX=0, inY=0;
+    let winNum=0;
+    for(i=0;i<19;i++){
+        for(j=0;j<18;j++){
+            if(test[i][j]>200){
+                for(d=1;d<5;d++){
+                    if(test[i][j+d]>200){
+                        console.log(i,j+d)
+                        winNum++;
+                        console.log('winnum 출력')
+                        console.log(winNum)
+                    }
+                    if(test[i][j+d]<90){
+                        inY = i; inX = j+d;
+                    }
+                    if(winNum == 3){
+                        if(inX!=0){
+                            white(inY,inX)
+                            return 1;
+                        }
+                    }
+                }
+                inY=0;
+                inX=0;
+                winNum = 0;
+            }
+        }
+    }
+}
+
+function diaJustOneNo(){
+    let d = 0;
+    let inX;
+    let inY;
+    let winNum=0;
+    for(i=0;i<19;i++){
+        for(j=0;j<18;j++){
+            if(test[i][j]>200){ // 대각선 끝에가 0
+                if(test[i+4][j-4]>200){
+                    for(d=1;d<4;d++){
+                        if(test[i+d][j-d]>200){
+                            winNum++;
+                        }
+                        if(test[i+d][j-d]<90){
+                            inY = i+d;
+                            inX = j-d;
+                        }
+                        if(winNum == 2){
+                            if(inX!=0){
+                                console.log('대각선 위로 하나 빈거 채우고 이기는 수')
+                                white(inY,inX)
+                                return 1;
+                            }
+                        }
+                    }
+                    inY=0;
+                    inX=0;
+                    winNum = 0;
+                }
+            }
+        }
+    }
+}
+
+function diaUnderJustOneNo(){
+    let d = 0;
+    let inX;
+    let inY;
+    let winNum=0;
+    for(i=0;i<19;i++){
+        for(j=0;j<18;j++){
+            if(test[i][j]>200){ // 대각선 끝에가 0
+                if(test[i+4][j+4]>200){
+                    for(d=1;d<4;d++){
+                        if(test[i+d][j+d]>200){
+                            winNum++;
+                        }
+                        if(test[i+d][j+d]<90){
+                            inY = i+d;
+                            inX = j+d;
+                        }
+                        if(winNum == 2){
+                            if(inX!=0){
+                                console.log('대각선 아래로 하나 빈거 채우고 이기는 수')
+                                white(inY,inX)
+                                return 1;
+                            }
+                        }
+                    }
+                    winNum = 0;
                 }
             }
         }
