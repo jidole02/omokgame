@@ -12,5 +12,4 @@
 - 위 주소에서 이용해보실 수 있습니다.
 - 아직 오류가 조금씩 있으므로 양해 부탁드립니다.
 
-
-<img src="C:\Users\user\Downloads\캡처.PNG"/>
+!이미지"C:\Users\user\Downloads\캡처.PNG"
