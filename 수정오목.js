@@ -9,6 +9,7 @@ let curY, curX;
 let ai = 0;
 let human = 0;
 const test = Array.from(Array(19), () => new Array(18))
+let num, num2;
 
 closeButton.addEventListener('click',function(){
     winCont.style.display = "none"
@@ -23,9 +24,9 @@ for(i=0;i<19;i++){
                 return 0;
             }
             if((event.target.parentNode.id == 0 || event.target.parentNode.id == 18)||(event.target.id==0||event.target.id==17)){
-                alert('끝에 놓을 수 없습니다.')
+                alert('끝에 둘 수 없습니다.')
                 return 0;
-            }
+            } 
             check(event.target.parentNode.id,event.target.id)    
             setTimeout(()=>{
                 if(whiteWin()){
@@ -42,7 +43,7 @@ for(i=0;i<19;i++){
                     window.localStorage.setItem('human', human)
                     return 0;
                 }
-            },100)                      
+            },100)                 
         }
     }
 }
@@ -78,10 +79,10 @@ function white(e, b){
         dolCont.children[e].children[b].style.opacity = "1";
     })
     dolCont.children[e].children[b].style.background = "radial-gradient(white,whitesmoke,rgb(221, 221, 221))"
-    checkWhite(e,b);
+/*     checkWhite(e,b); */
 }
 // 흰 돌 둔 곳 가중치 1 부여
-function checkWhite(y,x){
+ function checkWhite(y,x){
     let Y = y*1;
     let X = x*1;
     for(let num=0;num<3;num++){
@@ -89,7 +90,7 @@ function checkWhite(y,x){
             test[Y+num-1][X+num2] += -1;
         }
     }
-}
+} 
 // 검은 돌 둔 곳을 -1 가중치 부여
 function check(y,x){
     let Y = y*1;
@@ -98,17 +99,23 @@ function check(y,x){
         for(let num2=0;num2<3;num2++){
             test[Y+num-1][X+num2] += -1;
         }
-    }
+    } 
     black(Y,X);
     setTimeout(()=>{
         blackUp(Y,X)
    },19) 
-}
+} 
 // 검은돌 공격
 function blackUp(e,b){
     let max = 0;
     let min = 50;
     test[e][b] = 100;
+        // 가장 마지막 수
+        if(sucessDolHorizon()){ // 최후의 수
+            console.log('최후')
+            say.innerHTML = "마지막 수입니다."
+            return 0;
+        }
     if(diaJustOneNo()){
         return 0;
     }
@@ -134,12 +141,6 @@ function blackUp(e,b){
         console.log('대각선 위쪽으로 급함')
         say.innerHTML = "이번에도 질 뻔 했어요."
         return 0;   
-    }
-    // 가장 마지막 수
-    if(sucessDolHorizon()){ // 최후의 수
-        console.log('최후')
-        say.innerHTML = "마지막 수입니다."
-        return 0;
     }
     // 다시 막아야 하는 수들
     if(diaUpNoOne3()){
@@ -308,7 +309,7 @@ function blackUp(e,b){
         return 0;
     }
     // 3개가 안 걸리면
-    if(bestDol()){
+   /*  if(bestDol()){
         console.log('최선')
         say.innerHTML = "흐헤헿"
         return 0;
@@ -322,7 +323,7 @@ function blackUp(e,b){
         console.log('대각선 위 최선')
         say.innerHTML = "히히헤헤꼴꼴"
         return 0;
-    }
+    } */
     else
     console.log('가중치에 따라')
     say.innerHTML = "난 여기에 둘게"
@@ -1177,6 +1178,7 @@ function square(){
 }
 
 function horizonNoOneSuccess(){
+    console.log('호출')
     let d = 0;
     let inX;
     let inY;
@@ -1187,15 +1189,16 @@ function horizonNoOneSuccess(){
                 console.log(i,j)
                 if(test[i][j+3]>200){ // -o-oo-
                     if(test[i][j-1] < 90 && test[i][j+4]<90){ // 양 끝 비었는지 확인
-                        for(d=1; d<4;d++){
+                        for(d=1; d<3;d++){
                             if(test[i][j+d]>200){
                                 winNum++;
+                                console.log(i,j+d)
                                 console.log(winNum)
                             }
                             if(test[i][j+d]<90){
                                 inY = i;
                                 inX = j+d;
-                                if(winNum == 2){
+                                if(winNum == 1){
                                     if(inX!=0){
                                         white(inY,inX)
                                         return 1;
@@ -1283,7 +1286,6 @@ function diaUnderNoOneSuccess(){
 
 
 function horJustOneNo(){
-    console.log('가로 체크')
     let d = 0;
     let inX=0, inY=0;
     let winNum=0;
@@ -1294,8 +1296,6 @@ function horJustOneNo(){
                     if(test[i][j+d]>200){
                         console.log(i,j+d)
                         winNum++;
-                        console.log('winnum 출력')
-                        console.log(winNum)
                     }
                     if(test[i][j+d]<90){
                         inY = i; inX = j+d;
